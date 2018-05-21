@@ -14,16 +14,18 @@ def get_data(csv_file):
         csvfile.close()
 
     data = {}
-    fields = lines[0]
-    for field in fields:
-        data[field] = []
+    features = lines[0]
+    for feature in features:
+        data[feature] = []
     lines.pop(0)
     for line in lines:
         for i, value in enumerate(line):
-            data[fields[i]].append(value)
+            data[features[i]].append(value)
     return data
 
 def is_float(string):
+    if isinstance(string, float):
+        return True
     if len(string) == 0:
         return False
     if len(string) == 1:
@@ -42,21 +44,23 @@ def is_float(string):
             return False
     return True
 
-def quicksort(lst):
+def quicksort(lst, rev=False):
     if len(lst) < 2:
         return lst
     else:
-        pivot = lst[0]
-        less = [i for i in lst[1:] if i <= pivot]
-        greater = [i for i in lst[1:] if i > pivot]
-        return quicksort(less) + [pivot] + quicksort(greater)
+        pivot = lst[0] if rev == False else lst[-1]
+        less = [i for i in lst[1:] if i <= pivot] if rev == False\
+                            else [i for i in lst[:-1] if i <= pivot]
+        greater = [i for i in lst[1:] if i > pivot] if rev == False\
+                            else [i for i in lst[:-1] if i > pivot]
+        return quicksort(less, rev=rev) + [pivot] + quicksort(greater, rev=rev) if rev == False\
+                else quicksort(greater, rev=rev) + [pivot] + quicksort(less, rev=rev)
 
 def keep_only_float(lst):
     ret = []
     for elem in lst:
         if is_float(elem):
             ret.append(float(elem))
-
     return ret
 
 def is_int(f):

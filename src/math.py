@@ -1,4 +1,5 @@
 from src.utils import is_int, quicksort
+from math import exp, log
 
 def abs(x):
     return -x if x < 0 else x
@@ -34,10 +35,32 @@ def ceil(f):
     return int(f) if is_int(f) or f < 0 else int(f) + 1
 
 def quartile_n(lst, n):
-    return lst[ceil(float(n * len(lst)) / 4.)]
+    if n == 2:
+        if len(lst) % 2 == 0:
+            return mean([lst[int(len(lst) / 2) -1] , lst[int(len(lst) / 2)]])
+        else:
+            return lst[int(len(lst) / 2)]
+    else:
+        return lst[ceil(float(n / 4.) * len(lst))]
+
+def scalar_product(X, Y):
+    return sum([x * y for x, y in zip(X, Y)])
 
 def linear_function(a, b, x):
     return a * x + b
+
+def logistic_function(x):
+    return 1. / (1 + exp(-x))
+
+def h_theta(THETA, X):
+    return logistic_function(scalar_product(THETA, X))
+
+def logistic_cost(THETA, X, Y):
+    return (- 1. / len(Y)) * sum([y * log(h_theta(THETA, x)) + ((1 - y) *
+        log(1 - h_theta(THETA, x))) for y, x in zip(Y, X)])
+
+def partial_derivative_n(THETA, X, Y, n):
+    return (1. / len(Y)) * sum([(h_theta(THETA, x) - y) * x[n] for y, x in zip(Y, X)])
 
 def sqrt(x, epsilon=10e-15):
     """
