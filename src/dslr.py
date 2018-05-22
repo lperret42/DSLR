@@ -1,5 +1,6 @@
-from src.utils import get_data, keep_only_float, quicksort
+from src.utils import get_data, keep_only_float, quicksort, is_float
 from src.math import min, max, mean, std, quartile_n, sqrt
+import random
 
 def read_csv(csvfile):
     df = DataFrame()
@@ -36,15 +37,15 @@ class DataFrame(object):
     def describe(self):
         if self.description == {}:
             self.description = self.get_description()
-        nb_features = len(self.description["Count"])
+        nb = len(self.description["Count"])
         order = ["Count", "Mean", "Std", "Min", "25%", "50%", "75%", "Max"]
         print("{:<10}".format(""), end="")
-        [print("{:>17}".format(self.description["Field"][n][:15]), end="") for n in range(nb_features)]
+        [print("{:>17}".format(self.description["Field"][n][:15]), end="") for n in range(nb)]
         print("")
         for elem in order:
             features = self.description[elem]
             print("{:<10}".format(elem), end="")
-            [print("{:17.6f}".format(round(features[n], 6)), end="") for n in range(nb_features)]
+            [print("{:17.6f}".format(round(features[n], 6)), end="") for n in range(nb)]
             print("")
 
     def filter(self, feature_value_to_filter={}, to_keep=True):
@@ -62,14 +63,19 @@ class DataFrame(object):
         df = DataFrame(data=self.filter(feature_value_to_filter=feature_value_to_filter))
         return df
 
-    def remove_nan(self):
+    def remove_nan(self, exception="Hogwarts House"):
         self.data = self.filter(feature_value_to_filter={feature:"" for (feature, _) in
-                self.data.items()}, to_keep=False)
+            self.data.items() if feature != exception}, to_keep=False)
+
+    def digitalize(self):
+        for feature, values in self.data.items():
+            if is_float(values[0]):
+                self.data[feature] = list(map(float, values))
 
     def standardize(self):
         for feature, values in self.data.items():
             if feature == "Index":
-                self.standardized["Index"] = values
+                self.standardized[feature] = values
                 continue
             only_float = keep_only_float(values)
             if len(only_float) > 0:
@@ -79,3 +85,17 @@ class DataFrame(object):
                 self.stand_coefs[feature] = {"mu": mu, "sigma":sigma}
             else:
                 self.standardized[feature] = values
+
+    def train_test_split(self, train_ratio=0.8):
+        nb_rows = len(self.data["Index"])
+        index = list(range(nb_rows))
+        random.shuffle(index)
+        index_train = index[:int(train_ratio * nb_rows)]
+        index_test = index[int(train_ratio * nb_rows):]
+        df_train, df_test = DataFrame(), DataFrame()
+        df_train.data = {feature: [values[i] for i in range(len(values)) if i in index_train]
+                                    for feature, values in self.data.items()}
+        df_test.data = {feature: [values[i] for i in range(len(values)) if i in index_test]
+                                    for feature, values in self.data.items()}
+
+        return df_train, df_test

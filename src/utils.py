@@ -24,7 +24,7 @@ def get_data(csv_file):
     return data
 
 def is_float(string):
-    if isinstance(string, float):
+    if isinstance(string, float) or isinstance(string, int):
         return True
     if len(string) == 0:
         return False
