@@ -38,14 +38,14 @@ def main():
     print("len test:", len(df_test.data["Hogwarts House"]))
     data = df_train.standardized
     to_train = {
-            #"Gryffindor": ["History of Magic", "Transfiguration"],
-            #"Hufflepuff": ["Charms", "Ancient Runes"],
-            #"Ravenclaw": ["Charms", "Muggle Studies"],
-            #"Slytherin": ["Divination"],
-            "Gryffindor": df.numerical_features,
+            "Gryffindor": ["History of Magic", "Transfiguration"],
             "Hufflepuff": df.numerical_features,
-            "Ravenclaw": df.numerical_features,
-            "Slytherin": df.numerical_features,
+            "Ravenclaw": ["Charms", "Muggle Studies"],
+            "Slytherin": ["Divination"],
+            #"Gryffindor": df.numerical_features,
+            #"Hufflepuff": df.numerical_features,
+            #"Ravenclaw": df.numerical_features,
+            #"Slytherin": df.numerical_features,
     }
     to_save = {}
     for house, features in to_train.items():
