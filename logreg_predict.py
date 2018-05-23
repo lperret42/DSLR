@@ -1,11 +1,10 @@
 #!/Users/lperret/.brew/Cellar/python/3.6.5/bin/python3.6
 
-from src import dslr
-from src.math import logistic_function, scalar_product
-from src.utils import is_float
 import csv
 import json
 import argparse
+from src import dslr
+from src.math import logistic_function, scalar_product
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -19,17 +18,16 @@ def main():
     args = parse_arguments()
     df = dslr.read_csv(args.csvfile)
     del df.data["Hogwarts House"]
-    df.remove_nan()
+    df.get_numerical_features()
     df.digitalize()
+    df.replace_nan()
     weights = json.load(open(args.weights))
-    all_features = [feature for feature, values in df.data.items() if
-                                feature != "Index" and is_float(values[0])]
-    theta_by_house = {house: [weights[house][feature] for feature in all_features] for
+    theta_by_house = {house: [weights[house][feature] for feature in df.numerical_features] for
             house, features in weights.items()}
     predictions = []
     probas = {}
     for i in range(len(df.data["Index"])):
-        x = [df.data[feature][i] for feature in all_features]
+        x = [df.data[feature][i] for feature in df.numerical_features]
         for house, _ in weights.items():
             cte = weights[house]["cte"]
             theta = theta_by_house[house]

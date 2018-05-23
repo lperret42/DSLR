@@ -1,12 +1,4 @@
-import argparse
 import csv
-
-def parse_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('csvfile', help='data.csv')
-    args = parser.parse_args()
-
-    return args
 
 def get_data(csv_file):
     with open(csv_file, 'r') as csvfile:
@@ -41,6 +33,12 @@ def is_float(string):
         return False
     for c in string:
         if not (c == '-' or c == '.' or c in "0123456789"):
+            return False
+    return True
+
+def is_list_num(lst):
+    for elem in lst:
+        if elem != "" and not is_float(elem):
             return False
     return True
 

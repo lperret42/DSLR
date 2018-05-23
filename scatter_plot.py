@@ -1,16 +1,23 @@
 #!/Users/lperret/.brew/Cellar/python/3.6.5/bin/python3.6
 
-from src.utils import parse_arguments, get_data, is_float
-from src import dslr
+import argparse
 import matplotlib.pyplot as plt
+from src import dslr
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('csvfile', help='data.csv')
+    args = parser.parse_args()
+
+    return args
 
 def main():
     args = parse_arguments()
     df = dslr.read_csv(args.csvfile)
+    df.get_numerical_features()
     df.remove_nan()
     df.standardize()
-    numerical_features = [feature for feature, values in df.data.items() if
-                    feature != "Index" and is_float(values[0])]
+    numerical_features = df.numerical_features
     df_standardized = dslr.DataFrame(data=df.standardized)
     dfs_by_house = {house: df_standardized.get_df_filtered({"Hogwarts House": house}) for
             house in list(set(df.data["Hogwarts House"]))}

@@ -27,6 +27,15 @@ def sum(lst):
 def mean(lst):
     return sum(lst) / len(lst)
 
+def sum_with_empty(lst):
+    s = 0
+    for elem in lst:
+        s += elem if elem != "" else 0
+    return s
+
+def mean_with_empty(lst):
+    return sum_with_empty(lst) / len([elem for elem in lst if elem != ""])
+
 def std(lst):
     mu = mean(lst)
     return sqrt(sum([(x - mu) ** 2 for x in lst]) / (len(lst) - 1))
@@ -50,10 +59,11 @@ def linear_function(a, b, x):
     return a * x + b
 
 def logistic_function(x):
-    return 1. / (1 + exp(-x))
+    return 1. / (1 + exp(-x)) if -x <= 500 else 0
 
 def h_theta(THETA, X):
-    return logistic_function(scalar_product(THETA, X))
+    #return logistic_function(scalar_product(THETA, X))
+    return min([logistic_function(scalar_product(THETA, X)), 0.99999])
 
 def logistic_cost(THETA, X, Y):
     return (- 1. / len(Y)) * sum([y * log(h_theta(THETA, x)) + ((1 - y) *

@@ -1,5 +1,5 @@
-from src.utils import get_data, keep_only_float, quicksort, is_float
-from src.math import min, max, mean, std, quartile_n, sqrt
+from src.utils import get_data, keep_only_float, quicksort, is_float, is_list_num
+from src.math import min, max, mean, std, quartile_n, sqrt, sum_with_empty, mean_with_empty
 import random
 
 def read_csv(csvfile):
@@ -13,6 +13,13 @@ class DataFrame(object):
         self.description = {}
         self.standardized= {}
         self.stand_coefs = {}
+        self.numerical_features = []
+
+    def get_numerical_features(self):
+        self.numerical_features = []
+        for feature, values in self.data.items():
+            if feature != "Index" and is_list_num(values):
+                self.numerical_features.append(feature)
 
     def get_description(self):
         description = {}
@@ -67,10 +74,17 @@ class DataFrame(object):
         self.data = self.filter(feature_value_to_filter={feature:"" for (feature, _) in
             self.data.items() if feature != exception}, to_keep=False)
 
+    def replace_nan(self):
+        for feature, values in self.data.items():
+            if not feature in self.numerical_features:
+                continue
+            m = mean_with_empty(values)
+            self.data[feature] = [value if value != "" else m for value in values]
+
     def digitalize(self):
         for feature, values in self.data.items():
             if is_float(values[0]):
-                self.data[feature] = list(map(float, values))
+                self.data[feature] = [float(value) if value != "" else value for value in values]
 
     def standardize(self):
         for feature, values in self.data.items():
