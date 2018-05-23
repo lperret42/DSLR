@@ -21,6 +21,7 @@ def main():
     df_standardized = dslr.DataFrame(data=df.standardized)
     dfs_by_house = {house: df_standardized.get_df_filtered({"Hogwarts House": house}) for
             house in list(set(df.data["Hogwarts House"]))}
+    print("The 2 features Astronomy and Defense Against the Dark Arts are similar")
     for i in range(len(numerical_features) - 1):
         for j in range(i+1, len(numerical_features)):
             fig, ax = plt.subplots(1,1, figsize=(6,6))

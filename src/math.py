@@ -62,7 +62,6 @@ def logistic_function(x):
     return 1. / (1 + exp(-x)) if -x <= 500 else 0
 
 def h_theta(THETA, X):
-    #return logistic_function(scalar_product(THETA, X))
     return min([logistic_function(scalar_product(THETA, X)), 0.99999])
 
 def logistic_cost(THETA, X, Y):

@@ -20,6 +20,8 @@ def main():
     df_standardized = dslr.DataFrame(data=df.standardized)
     dfs_by_house = {house: df_standardized.get_df_filtered({"Hogwarts House": house}) for
             house in list(set(df.data["Hogwarts House"]))}
+    print("The Care of Magical Creatures course has a homogeneous",
+            "distribution of marks between the 4 houses")
     for feature in df.numerical_features:
         values = df.data[feature]
         to_plot = [df.data[feature] for house, df in dfs_by_house.items()]

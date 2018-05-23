@@ -2,7 +2,6 @@
 
 import argparse
 import matplotlib.pyplot as plt
-from src.utils import parse_arguments, get_data, is_float
 from src import dslr
 
 def parse_arguments():
