@@ -42,7 +42,8 @@ def main():
         predictions.append([int(df.data["Index"][i]), predict_house])
 
     with open('houses.csv', 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=['Index', 'Hogwarts House'])
+        writer = csv.DictWriter(csvfile, fieldnames=['Index', 'Hogwarts House'],
+                                                        lineterminator='\n')
         writer.writeheader()
         for prediction in predictions:
             writer.writerow({'Index': prediction[0], 'Hogwarts House':prediction[1]})
