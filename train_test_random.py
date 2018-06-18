@@ -1,5 +1,3 @@
-#!/Users/lperret/.brew/Cellar/python/3.6.5/bin/python3.6
-
 import argparse
 from sklearn.metrics import accuracy_score
 from src.logistic_regressor import LogisticRegressor
