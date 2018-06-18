@@ -1,5 +1,3 @@
-#!/Users/lperret/.brew/Cellar/python/3.6.5/bin/python3.6
-
 import argparse
 import json
 from src import dslr
